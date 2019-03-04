@@ -16,6 +16,8 @@ class TweetCellTableViewCell: UITableViewCell {
     @IBOutlet weak var userIdLabel: UILabel!
     @IBOutlet weak var retweetButton: UIButton!
     @IBOutlet weak var favButton: UIButton!
+    @IBOutlet weak var retweetCount: UILabel!
+    @IBOutlet weak var favCount: UILabel!
     
     @IBAction func retweetTweet(_ sender: Any) {
         TwitterAPICaller.client?.retweetTweet(tweetId: tweetId, success: {
@@ -47,6 +49,7 @@ class TweetCellTableViewCell: UITableViewCell {
     func setRetweet (_ isRetweeted:Bool){
         if (isRetweeted){
             retweetButton.setImage(UIImage(named: "retweet-green"), for: UIControl.State.normal)
+            retweetCount.textColor = UIColor.green
             retweetButton.isEnabled = false
         } else {
             retweetButton.setImage(UIImage(named: "retweet"), for: UIControl.State.normal)
@@ -58,9 +61,40 @@ class TweetCellTableViewCell: UITableViewCell {
         favorited = isFavorited
         if (favorited) {
             favButton.setImage(UIImage(named: "favorite-red"), for: UIControl.State.normal)
+            favCount.textColor = UIColor.red
+            
+            let fCount = self.favCount.text
+            var counter = 0
+            
+            if(fCount == ""){
+                counter = 1
+            }
+            else{
+                let temp = Int(fCount!)
+                counter = temp! + 1
+            }
+            self.favCount.text = String(counter)
+            
         }
         else {
             favButton.setImage(UIImage(named: "favorite"), for: UIControl.State.normal)
+            favCount.textColor = UIColor.lightGray
+            
+            var fCount = self.favCount.text
+            var counter = 0
+            var temp = 1
+            
+            if (fCount == ""){
+                temp = 1
+            }else {
+                temp = Int(fCount!)!
+            }
+            fCount = ""
+            if (temp != 1){
+                counter = temp - 1
+                fCount = String(counter)
+            }
+            self.favCount.text = fCount
         }
     }
     

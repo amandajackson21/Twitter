@@ -83,14 +83,28 @@ class HomeTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "tweetCell", for: indexPath) as! TweetCellTableViewCell
         
-        let user = tweetArray[indexPath.row]["user"] as!
-        NSDictionary
+        let user = tweetArray[indexPath.row]["user"] as! NSDictionary
         
         let userID = user["screen_name"] as? String
+        let favICount = tweetArray[indexPath.row]["favorite_count"] as! Int
+        let retweetICount = tweetArray[indexPath.row]["retweet_count"] as! Int
+        
         
         cell.userNameLabel.text = user["name"] as? String
         cell.tweetsLabel.text = tweetArray[indexPath.row]["text"] as? String
         cell.userIdLabel.text = "@" + userID!
+        
+        if (favICount == 0){
+            cell.favCount.text = ""
+        } else {
+            cell.favCount.text = String(favICount)
+        }
+        
+        if (retweetICount == 0){
+            cell.retweetCount.text = ""
+        } else {
+            cell.retweetCount.text = String(retweetICount)
+        }
         
         let imageUrl = URL(string: (user["profile_image_url_https"] as? String)!)
         let data = try? Data(contentsOf: imageUrl!)
@@ -98,6 +112,7 @@ class HomeTableViewController: UITableViewController {
         if let imageData = data {
             cell.profileImage.image = UIImage(data: imageData)
         }
+        
         cell.setFavorited(tweetArray[indexPath.row]["favorited"] as! Bool)
         cell.tweetId = tweetArray[indexPath.row]["id"] as! Int
         cell.setRetweet(tweetArray[indexPath.row]["retweeted"] as! Bool)
